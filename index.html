@@ -18,12 +18,45 @@
             renderer.setSize( window.innerWidth, window.innerHeight );
             document.body.appendChild( renderer.domElement );
 
+            var cubes = [];
+            for (i = 0; i < grid_width; i++) {
+                var temp_arr = [];
+                for (j = 0; j < grid_height; j++) {
+                    temp_arr.push(0);
+                }
+                cubes.push(temp_arr);
+            }
+
             function add_cube(c, x, y, z) {
                 var geometry = new THREE.BoxGeometry( 1, 1, z );
                 var material = new THREE.MeshBasicMaterial( { color: c } );
                 var cube = new THREE.Mesh( geometry, material );
                 cube.position.set( x, y, 0 );
                 scene.add( cube );
+                cubes[x][y] = cube;
+            }
+
+            function edit_cube(c, x, y, z) {
+                var cube = cubes[x][y];
+                cube.scale(1, 1, z/cube.geometry.parameters.depth)
+                cube.material = new THREE.MeshBasicMaterial( { color: c } );
+            }
+            
+            var state = get_sample_state();
+            //make cells
+            for (x = 0; x < grid_width; x++) {
+                for (y = 0; y < grid_height; y++) {
+                    var pixel = state[x][y];
+                    if (pixel[0] > 0.0) {
+                        add_cube(0xdddddd, x, y, pixel[0]);
+                    }
+                    else if (pixel[1] > 0.0){
+                        dd_cube(0x000000, x, y, pixel[1]);
+                    }
+                    else {
+                        add_cube(0x0000ff, x, y, pixel[2]);
+                    }
+                }
             }
 
             camera.position.z = 30;
@@ -32,26 +65,24 @@
 
             function animate() {
                 requestAnimationFrame( animate );
-                while(scene.children.length > 0){ 
-                    scene.remove(scene.children[0]); 
-                }
 
-                var state = simulate_step(get_sample_state());
-                //make cells
+                state = simulate_step(get_sample_state());
+                //edit cells
                 for (x = 0; x < grid_width; x++) {
                     for (y = 0; y < grid_height; y++) {
                         var pixel = state[x][y];
                         if (pixel[0] > 0.0) {
-                            add_cube(0xdddddd, x, y, pixel[0]);
+                            edit_cube(0xdddddd, x, y, pixel[0]);
                         }
                         else if (pixel[1] > 0.0){
-                            dd_cube(0x000000, x, y, pixel[1]);
+                            edit_cube(0x000000, x, y, pixel[1]);
                         }
                         else {
-                            add_cube(0x0000ff, x, y, pixel[2]);
+                            edit_cube(0x0000ff, x, y, pixel[2]);
                         }
                     }
                 }
+                scene.updateMatrix();
                 
                 // for (i = 0; i < scene.children.length; i++) {
                 //     scene.children[i].rotation.x += Math.random()/5.0;
