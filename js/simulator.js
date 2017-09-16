@@ -1,7 +1,7 @@
 /*
-start is an array of arrays of stone height
+start is an array of arrays of [stone height, snow height, water height]
 returns an array of arrays of [stone height, snow height, water height]
 */
-function simulate(start){
-
+function simulate_step(start){
+ return start;
 }
