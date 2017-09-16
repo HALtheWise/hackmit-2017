@@ -1,6 +1,6 @@
 /*
-start is an array of arrays of [stone height, snow height, water height]
-returns an array of arrays of [stone height, snow height, water height]
+start is an array of arrays of [stone height, water height, snow height]
+returns an array of arrays of [stone height, water height, snow height]
 */
 function simulate_step(state){
 	dt = 0.5;
@@ -8,12 +8,12 @@ function simulate_step(state){
 	// Add snow
 	snowfallFunc = function(initial) {
 		altitude = initial[0];
-		snow = initial[1];
+		snow = initial[2];
 		if (altitude > snow_altitude){
 			snow += snow_rate * dt;
 		}
 		// BEWARE: this may alter the original object in a bad way. Oops.
-		initial[1] = snow;
+		initial[2] = snow;
 		return initial;
 	}
 
@@ -22,8 +22,8 @@ function simulate_step(state){
 	// Melt snow
 	meltingFunc = function(initial){
 		altitude = initial[0];
-		snow = initial[1];
-		water = initial[2];
+		snow = initial[2];
+		water = initial[1];
 
 		melt = melt_rate * dt;
 		melt = Math.min(melt, snow);
@@ -32,8 +32,8 @@ function simulate_step(state){
 		water += melt * water_per_snow;
 
 		// BEWARE: this may alter the original object in a bad way. Oops.
-		initial[1] = snow;
-		initial[2] = water;
+		initial[2] = snow;
+		initial[1] = water;
 		return initial;
 	}
 
@@ -46,7 +46,7 @@ function simulate_step(state){
 	for(var i=0; i<grid_height; i++){
 		for (var j=0; j<grid_width; j++){
 			// Calculate heights
-			var ownHeight = state[i][j][0] + state[i][j][2];
+			var ownHeight = state[i][j][0] + state[i][j][1];
 			
 			var northHeight = 99999999999999;
 			var southHeight = 99999999999999;
@@ -54,16 +54,16 @@ function simulate_step(state){
 			var eastHeight  = 99999999999999;
 
 			if (i > 0) {
-				northHeight = state[i-1][j][0] + state[i-1][j][2];
+				northHeight = state[i-1][j][0] + state[i-1][j][1];
 			}
 			if (i < grid_height-1) {
-				southHeight = state[i+1][j][0] + state[i+1][j][2];
+				southHeight = state[i+1][j][0] + state[i+1][j][1];
 			}
 			if (j > 0) {
-				westHeight = state[i][j-1][0] + state[i][j-1][2];
+				westHeight = state[i][j-1][0] + state[i][j-1][1];
 			}
 			if (j < grid_width-1) {
-				eastHeight = state[i][j+1][0] + state[i][j+1][2];
+				eastHeight = state[i][j+1][0] + state[i][j+1][1];
 			}
 
 			smallest=Math.min(northHeight, southHeight, westHeight, eastHeight);
@@ -74,7 +74,7 @@ function simulate_step(state){
 
 			// Calculate flow
 			flowAmount = flow_rate_const*(ownHeight-smallest)*dt;
-			flowAmount = Math.min(flowAmount, state[i][j][2]);
+			flowAmount = Math.min(flowAmount, state[i][j][1]);
 
 			flows[i][j][1] = flowAmount;
 
@@ -103,9 +103,9 @@ function simulate_step(state){
 	for(var i=0; i<grid_height; i++){
 		for (var j=0; j<grid_width; j++){
 			if(state[i][j][0]<ocean_altitude){
-				state[i][j][2]=ocean_altitude-state[i][j][0];
+				state[i][j][1]=ocean_altitude-state[i][j][0];
 			}else{
-				state[i][j][2] = state[i][j][2] + flows[i][j][0] - flows[i][j][1];
+				state[i][j][1] = state[i][j][1] + flows[i][j][0] - flows[i][j][1];
 				var stone_eroded = Math.pow(flows[i][j][1]/dt, 2)*erosion_rate_const*dt;
 				state[i][j][0] -= stone_eroded;
 			}
