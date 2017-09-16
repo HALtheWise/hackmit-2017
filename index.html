@@ -27,10 +27,16 @@
                 cubes.push(temp_arr);
             }
 
-            function add_cube(c, x, y, z) {
-                var geometry = new THREE.BoxGeometry( 1, 1, z );
-                var material = new THREE.MeshBasicMaterial( { color: c } );
+            // Global Variables //
+
+            // Meshes //
+            var water_texture = new THREE.TextureLoader().load( 'images/water.png' );
+            var water_material = new THREE.MeshBasicMaterial( { map: texture } );
+            var geometry = new THREE.BoxBufferGeometry( 1, 1, 1 );
+
+            function add_cube(x, y, z, material) {
                 var cube = new THREE.Mesh( geometry, material );
+                cube.position.z = z;
                 cube.position.set( x, y, 0 );
                 scene.add( cube );
                 cubes[x][y] = cube;
@@ -42,7 +48,7 @@
                 cube.material = new THREE.MeshBasicMaterial( { color: c } );
                 cube.updateMatrix();
             }
-            
+
             var state = get_sample_state();
             //make cells
             for (x = 0; x < grid_width; x++) {
@@ -84,7 +90,7 @@
                     }
                 }
                 scene.updateMatrix();
-                
+
                 for (i = 0; i < scene.children.length; i++) {
                     scene.children[i].rotation.z += Math.random()/5.0;
                 }
