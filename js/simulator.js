@@ -37,6 +37,76 @@ function simulate_step(state){
 		return initial;
 	}
 
+	// Flow the water
+
+	// Makes a grid_height x grid_width x 2 array of 0's
+	// [flow_in, flow_out]
+	var flows=new Array(grid_height).fill(0).map(function(hi){return new Array(grid_width).fill(0).map(function(hi){return [0,0]})});
+
+	for(var i=0; i<grid_height; i++){
+		for (var j=0; j<grid_width; j++){
+			// Calculate heights
+			var ownHeight = state[i][j][0] + state[i][j][2];
+			
+			var northHeight = 99999999999999;
+			var southHeight = 99999999999999;
+			var westHeight  = 99999999999999;
+			var eastHeight  = 99999999999999;
+
+			if (i > 0) {
+				northHeight = state[i-1][j][0] + state[i-1][j][2];
+			}
+			if (i < grid_height-1) {
+				southHeight = state[i+1][j][0] + state[i+1][j][2];
+			}
+			if (j > 0) {
+				westHeight = state[i][j-1][0] + state[i][j-1][2];
+			}
+			if (j < grid_width-1) {
+				eastHeight = state[i][j+1][0] + state[i][j+1][2];
+			}
+
+			smallest=Math.min(northHeight, southHeight, westHeight, eastHeight);
+
+			if (ownHeight <= smallest){
+				continue;
+			}
+
+			// Calculate flow
+			flowAmount = flow_rate_const*(ownHeight-smallest)*dt;
+			flowAmount = Math.min(flowAmount, state[i][j][2]);
+
+			flows[i][j][1] = flowAmount;
+
+			// Apply flow
+			if (northHeight==smallest){
+				flows[i-1][j][0] += flowAmount;
+				continue;
+			}
+			if (southHeight==smallest){
+				flows[i+1][j][0] += flowAmount;
+				continue;
+			}
+			if (westHeight==smallest){
+				flows[i][j-1][0] += flowAmount;
+				continue;
+			}
+			if (eastHeight==smallest){
+				flows[i][j+1][0] += flowAmount;
+				continue;
+			}
+		}
+	}
+
+	// Apply flows to values
+
+	for(var i=0; i<grid_height; i++){
+		for (var j=0; j<grid_width; j++){
+			state[i][j][2] = state[i][j][2] + flows[i][j][0] - flows[i][j][1];
+		}
+	}
+	
+
 	state = state.map(function(row){return row.map(meltingFunc)})
 
 	return state;
