@@ -18,18 +18,48 @@
             renderer.setSize( window.innerWidth, window.innerHeight );
             document.body.appendChild( renderer.domElement );
 
-            var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-            var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-            var cube = new THREE.Mesh( geometry, material );
-            // cube.position = new THREE.Vector3( 0, 0, 5 );
-            scene.add( cube );
+            function add_cube(c, x, y, z) {
+                var geometry = new THREE.BoxGeometry( 1, 1, z );
+                var material = new THREE.MeshBasicMaterial( { color: c } );
+                var cube = new THREE.Mesh( geometry, material );
+                cube.position.set( x, y, 0 );
+                scene.add( cube );
+            }
 
-            camera.position.z = 5;
+            camera.position.z = 30;
+            camera.position.x = grid_width/2;
+            camera.position.y = grid_height/2;
 
             function animate() {
                 requestAnimationFrame( animate );
-                cube.rotation.x += 0.1;
-                cube.rotation.y += 0.1;
+                while(scene.children.length > 0){ 
+                    scene.remove(scene.children[0]); 
+                }
+
+                var state = simulate_step(get_sample_state());
+                //make cells
+                for (x = 0; x < grid_width; x++) {
+                    for (y = 0; y < grid_height; y++) {
+                        var pixel = state[x][y];
+                        if (pixel[0] > 0.0) {
+                            add_cube(0xdddddd, x, y, pixel[0]);
+                        }
+                        else if (pixel[1] > 0.0){
+                            dd_cube(0x000000, x, y, pixel[1]);
+                        }
+                        else {
+                            add_cube(0x0000ff, x, y, pixel[2]);
+                        }
+                    }
+                }
+                
+                // for (i = 0; i < scene.children.length; i++) {
+                //     scene.children[i].rotation.x += Math.random()/5.0;
+                //     scene.children[i].rotation.y += Math.random()/5.0;
+                // }
+                
+                // cube.rotation.x += 0.1;
+                // cube.rotation.y += 0.1;
                 renderer.render( scene, camera );
             }
             animate();
