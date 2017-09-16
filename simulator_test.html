@@ -12,7 +12,10 @@
 		var state;
 
 		function display(val){
-			rows = state.map(function(row){return row.join(' | ')})
+			rows = state.map(function(row){
+				return row.map(function(val){
+					return val.map(function(x){
+						return x.toFixed(2)})}).join(' | ')})
 			document.getElementById("output").innerText = rows.join('\n');
 		}
 
