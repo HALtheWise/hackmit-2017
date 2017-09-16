@@ -1,0 +1,44 @@
+<head>
+	<script type="text/javascript" src="js/shared_consts.js"></script>
+
+	<script type="text/javascript">
+		grid_width = 3;
+		grid_height = 3;
+	</script>
+
+	<script type="text/javascript" src="js/simulator.js"></script>
+
+	<script type="text/javascript">
+		var state;
+
+		function display(val){
+			rows = state.map(function(row){return row.join(' | ')})
+			document.getElementById("output").innerText = rows.join('\n');
+		}
+
+		function resetState(){
+			state=[
+			[[15.0,0.0,0.0],[10.0,0.0,0.0],[5.0,0.0,0.0]],
+			[[13.0,0.0,0.0],[10.0,0.0,0.0],[5.0,0.0,0.0]],
+			[[15.0,0.0,0.0],[10.0,0.0,0.0],[5.0,0.0,0.0]]
+			];
+
+			display(state);
+		}
+
+		
+
+		function loop(){
+			state = simulate_step(state);
+			display(state);
+		}
+	</script>
+</head>
+<body onload="resetState()">
+	
+<button onclick="resetState()">Reset</button>
+<button onclick="loop()">Step</button>
+
+<div id="output">No data yet</div>
+
+</body>
