@@ -102,7 +102,13 @@ function simulate_step(state){
 
 	for(var i=0; i<grid_height; i++){
 		for (var j=0; j<grid_width; j++){
-			state[i][j][2] = state[i][j][2] + flows[i][j][0] - flows[i][j][1];
+			if(state[i][j][0]<ocean_altitude){
+				state[i][j][2]=ocean_altitude-state[i][j][0];
+			}else{
+				state[i][j][2] = state[i][j][2] + flows[i][j][0] - flows[i][j][1];
+				var stone_eroded = Math.pow(flows[i][j][1]/dt, 2)*erosion_rate_const*dt;
+				state[i][j][0] -= stone_eroded;
+			}
 		}
 	}
 	
