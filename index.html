@@ -205,10 +205,21 @@
             }
             buildGui();
 
-      			function render() {
-      				renderer.render( scene, camera );
-      			}
+  			function render() {
+  				renderer.render( scene, camera );
+  			}
 
+            var title = document.createElement('h1');
+            title.style.color = "white";
+            title.style.position = 'absolute';
+            title.style.width = 390;
+            title.style.height = 35;
+            title.style.top = 5;
+            title.style.left = 5;
+            title.style.backgroundColor = "black";
+            title.innerHTML = "Riverview: River Simulator";
+
+            document.body.appendChild(title);
 
             function animate() {
                 requestAnimationFrame( animate );
@@ -233,19 +244,6 @@
                   } finally {
                   }
                 }
-
-                var title = document.createElement('h1');
-                title.style.color = "white";
-                title.style.position = 'absolute';
-                //title.style.zIndex = 1;    // if you still don't see the label, try uncommenting this
-                title.style.width = 390;
-                title.style.height = 35;
-                title.style.top = 5;
-                title.style.left = 5;
-                title.style.backgroundColor = "black";
-                title.innerHTML = "Riverview: River Simulator";
-
-                document.body.appendChild(title);
 
                 var text2 = document.createElement('h2');
                 text2.style.color = "white";
