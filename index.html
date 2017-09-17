@@ -15,6 +15,7 @@
     <body>
         <script src="js/three.js"></script>
         <script src="js/OrbitControls.js"></script>
+        <script src="js/dat.gui.min.js"></script>
         <script>
             var scene = new THREE.Scene();
             var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
@@ -60,21 +61,6 @@
               return choices[index];
             }
 
-            function cube_type(cube) {
-              var id = cube.material.id % 3;
-              switch (id) {
-                case 0:
-                  return "water"
-                  break;
-                case 1:
-                  return "snow"
-                  break;
-                case 2:
-                  return "stone"
-                  break;
-              }
-            }
-
             function add_cube(x, z, y_start, y_end, material) {
                 var geometry = new THREE.BoxBufferGeometry( 1.2 + Math.random()/4, 1, 1.2 + Math.random()/4);
                 var cube = new THREE.Mesh( geometry, material );
@@ -86,8 +72,14 @@
 
             function add_cubes(x, z, ys) {
               var stone_material = new THREE.MeshBasicMaterial( { map: choose(stone_textures) } );
+              stone_material.name = "stone";
+
               var water_material = new THREE.MeshBasicMaterial( { map: water_texture } );
+              water_material.name = "water";
+
               var snow_material = new THREE.MeshBasicMaterial( { map: snow_texture } );
+              snow_material.name = "snow";
+
               return [add_cube(x, z, 0, ys[0], stone_material),
                       add_cube(x, z, ys[0], ys[1], water_material),
                       add_cube(x, z, ys[1], ys[2], snow_material)]
@@ -115,6 +107,9 @@
               edit_cube(cubes[x][y][2], zs[0] + zs[1] + (zs[2] / 2), zs[2]);
             }
 
+            function cube_type(cube) {
+              return cube.material.name;
+            }
 
             //make cells
             for (x = 0; x < grid_width; x++) {
@@ -158,6 +153,33 @@
                 mouse_start_y = event.clientY;
             }
 
+            var minTemp=0;
+            var maxTemp=68;
+            var parameters = {'minTemp':minTemp, 'maxTemp':maxTemp};
+
+            function buildGui() {
+                gui = new dat.GUI();
+                var params = {
+                  minTemp: minTemp,
+                  maxTemp: maxTemp,
+                }
+                gui.add( params, 'minTemp', 0, 32 ).onChange( function ( val ) {
+                  parameters.minTemp = val;
+                  render();
+                } );
+                gui.add( params, 'maxTemp', 68, 100 ).onChange( function ( val ) {
+                  parameters.maxTemp = val;
+                  render();
+                } );
+                gui.open();
+            }
+            buildGui();
+
+      			function render() {
+      				renderer.render( scene, camera );
+      			}
+
+
             function animate() {
                 requestAnimationFrame( animate );
 
@@ -173,17 +195,18 @@
 
                 for (i = 0; i < scene.children.length; i++) {
                   var cube = scene.children[i]
-                  if (cube_type(cube) == "water") {
-                    cube.rotation.y += (.5 - Math.random()) / 2.5;
+                  try {
+                    if (cube.material.name == "water") {
+                      cube.rotation.y += (.5 - Math.random()) / 5;
+                    }
+                  } catch (e) {
+                  } finally {
                   }
-
                 }
+
                 render();
             }
 
-      			function render() {
-      				renderer.render( scene, camera );
-      			}
             animate();
         </script>
     </body>
