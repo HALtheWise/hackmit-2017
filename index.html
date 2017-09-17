@@ -6,7 +6,7 @@
     <script src="js/load_map.js"></script>
 
     <meta charset=utf-8>
-    <title>Riverview</title>
+    <title>RiverView</title>
     <style>
         body { margin: 0; }
         canvas { width: 100%; height: 100% }
@@ -202,11 +202,22 @@
 
                 var text =
                 {
-                    map: 'map'
+                    map: 'neat'
                 }
-                gui.add(text, 'map', { King: 0, Queen: 1, Rook: 2 } ).onChange(  function ( val ) {
-                  console.log(val);
-                  render();
+                gui.add(text, 'map', 
+                	{"Everest":"everest", 
+                	"Fuji":"fuji", 
+                	"Jostedalsbreen":"jostedalsbreen", 
+                	"K2":"k2",
+                	"Kilamanjaro":"kilamanjaro", 
+					"Matterhorn":"matterhorn", 
+					"Moultonborough NH":"moultonboroughNH", 
+					"Zuult Slopes":"neat",
+						} ).onChange(  
+						function ( val ) {
+				            loadMap("heightmaps/"+val+".csv");
+				            state = loadedMap;
+                  			render();
                 } );
                 gui.open();
             }
@@ -224,7 +235,7 @@
             title.style.top = 5;
             title.style.left = 5;
             title.style.backgroundColor = "black";
-            title.innerHTML = "Riverview: River Simulator";
+            title.innerHTML = "RiverView River Simulator";
 
             document.body.appendChild(title);
 
