@@ -12,4 +12,4 @@ water_per_snow = 0.25; // Units of water height equal to one unit of snow height
 flow_rate_const = 2; // Units of (water height per time) per (water height difference)
 erosion_rate_const = .00005; // Units of (stone per time) eroded per (water per time)^2
 
-year_length = 100;
+year_length = 40;
