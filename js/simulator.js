@@ -128,6 +128,9 @@ function simulate_step(state){
 				var stone_eroded = Math.pow(flows[i][j][1]/dt, 2)*erosion_rate_const*dt;
 				state[i][j][0] -= stone_eroded;
 			}
+			if (i==0 || j==0 || i==grid_height-1 || j==grid_width-1) {
+				state[i][j][1] = Math.min(state[i][j][1], max_border_water);
+			}
 		}
 	}
 
