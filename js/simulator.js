@@ -6,16 +6,15 @@ returns an array of arrays of [stone height, water height, snow height]
 */
 function simulate_step(state){
 	dt = 0.1;
-	timeElapsed += dt;
+	timeElapsed += dt; 
 	var seasonalTemp = (-Math.sin(timeElapsed*2*Math.PI/year_length)+1)/2; // from 0 to 1 scale of temp
 	// var avgTemp = 0.1;
 
 	// var temp = -Math.sin(timeElapsed*2*Math.PI/year_length) //previous way of making fluctuating seasons, replaced by local temps.
 
 	localTempFunc = function(altitude){
-		var altitudeTemp = 1-(altitude/15)
-		var temp = .5*altitudeTemp+.5*seasonalTemp //range between 0 to 1 (0 is low temp, 1 is high temp)
-		return (temp+parameters.minTemp)*(parameters.maxTemp-parameters.minTemp);
+		altitudeTemp = 1-(altitude/15)
+		return .5*altitudeTemp+.5*seasonalTemp //range between 0 to 1 (0 is low temp, 1 is high temp)
 		// return avgTemp/altitude*10; //totally off scale. FIX.
 	}
 
@@ -120,10 +119,10 @@ function simulate_step(state){
 
 	for(var i=0; i<grid_height; i++){
 		for (var j=0; j<grid_width; j++){
-			if(state[i][j][0]<ocean_altitude){
+			if(state[i][j][0]<parameters.seaLevel){
 				// Remove the land, it's OCEAN time!
-				state[i][j][0] = 0.0;
-				state[i][j][1]=ocean_altitude-state[i][j][0];
+				// state[i][j][0] = 0.0;
+				state[i][j][1]=parameters.seaLevel-state[i][j][0];
 			}else{
 				state[i][j][1] = state[i][j][1] + flows[i][j][0] - flows[i][j][1];
 				var stone_eroded = Math.pow(flows[i][j][1]/dt, 2)*erosion_rate_const*dt;

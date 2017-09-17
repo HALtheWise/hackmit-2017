@@ -165,7 +165,7 @@
 
             var minTemp=0;
             var maxTemp=1;
-            var parameters = {'minTemp':minTemp, 'maxTemp':maxTemp};
+            var parameters = {'minTemp':minTemp, 'maxTemp':maxTemp, 'seaLevel':default_ocean_altitude};
 
             function buildGui() {
                 gui = new dat.GUI();
@@ -173,12 +173,16 @@
                   minTemp: (minTemp*50+20),
                   maxTemp: (maxTemp*50+20),
                 }
-                gui.add( params, 'minTemp', 0, 100 ).onChange( function ( val ) {
+                gui.add( params, 'maxTemp', 0, 100 ).onChange( function ( val ) {
                   parameters.minTemp = (val-20)/50;
                   render();
                 } );
-                gui.add( params, 'maxTemp', 0, 100 ).onChange( function ( val ) {
+                gui.add( params, 'minTemp', 0, 100 ).onChange( function ( val ) {
                   parameters.maxTemp = (val-20)/50;
+                  render();
+                } );
+                gui.add( parameters, 'seaLevel', 0, 10 ).onChange( function ( val ) {
+                  parameters.seaLevel = val;
                   render();
                 } );
                 gui.open();
