@@ -165,13 +165,19 @@
 
             var minTemp=0;
             var maxTemp=1;
-            var parameters = {'minTemp':minTemp, 'maxTemp':maxTemp, 'seaLevel':default_ocean_altitude};
+            var parameters = {
+            	'minTemp':minTemp, 
+            	'maxTemp':maxTemp, 
+            	'seaLevel':default_ocean_altitude,
+            	'snowRate':default_snow_rate,
+            };
 
             function buildGui() {
                 gui = new dat.GUI();
                 var params = {
                   minTemp: (minTemp*50+20),
                   maxTemp: (maxTemp*50+20),
+                  snowRate: 1,
                 }
                 gui.add( params, 'maxTemp', 0, 100 ).onChange( function ( val ) {
                   parameters.minTemp = (val-20)/50;
@@ -183,6 +189,10 @@
                 } );
                 gui.add( parameters, 'seaLevel', 0, 10 ).onChange( function ( val ) {
                   parameters.seaLevel = val;
+                  render();
+                } );
+                gui.add( params, 'snowRate', 0, 3 ).onChange( function ( val ) {
+                  parameters.snowRate = val/default_snow_rate;
                   render();
                 } );
                 gui.open();

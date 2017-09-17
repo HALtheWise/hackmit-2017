@@ -4,7 +4,7 @@ grid_height = 3;
 snow_altitude = 11.0; // Units
 default_ocean_altitude = 2.5; // Units
 
-snow_rate = .6; // Units per time
+default_snow_rate = .6; // Units per time
 melt_rate = 0.3; // Units of snow per time
 
 minimum_melt_temp = .3; // Range from 0 to 1

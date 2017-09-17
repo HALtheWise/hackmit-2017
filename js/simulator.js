@@ -13,8 +13,9 @@ function simulate_step(state){
 	// var temp = -Math.sin(timeElapsed*2*Math.PI/year_length) //previous way of making fluctuating seasons, replaced by local temps.
 
 	localTempFunc = function(altitude){
-		altitudeTemp = 1-(altitude/15)
-		return .5*altitudeTemp+.5*seasonalTemp //range between 0 to 1 (0 is low temp, 1 is high temp)
+		var altitudeTemp = 1-(altitude/15)
+		var temp = .5*altitudeTemp+.5*seasonalTemp //range between 0 to 1 (0 is low temp, 1 is high temp)
+		return (temp* (parameters.maxTemp-parameters.minTemp) + parameters.minTemp) 
 		// return avgTemp/altitude*10; //totally off scale. FIX.
 	}
 
@@ -24,7 +25,7 @@ function simulate_step(state){
 		snow = initial[2];
 		temp = localTempFunc(altitude);
 
-		current_snow_rate = snow_rate*Math.max(0, maximum_snow_temp-temp)/Math.max(2.0, snow);
+		current_snow_rate = parameters.snowRate*Math.max(0, maximum_snow_temp-temp)/Math.max(2.0, snow);
 
 		snow += current_snow_rate*dt;
 		// BEWARE: this may alter the original object in a bad way. Oops.
