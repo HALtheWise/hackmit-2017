@@ -63,9 +63,9 @@
                       add_cube(x, y, zs[1], zs[2], snow_material)]
             }
 
-            function edit_cube(cube, z_start, z_end) {
+            function edit_cube(cube, z_start, abs_z) {
                 cube.position.z = z_start;
-                var abs_z = z_end - z_start
+                // var abs_z = z_end - z_start
                 if (abs_z <= 0) {
                   cube.material.opacity = 0;
                 } else if (abs_z <= 1) {
@@ -79,9 +79,9 @@
             }
 
             function edit_cubes(x, y, zs) {
-              edit_cube(cubes[x][y][0], 0, zs[0]);
-              edit_cube(cubes[x][y][1], zs[0], zs[0]+zs[1]);
-              edit_cube(cubes[x][y][2], zs[0]+zs[1], zs[0]+zs[1]+zs[2]);
+              edit_cube(cubes[x][y][0], zs[0] / 2, zs[0]);
+              edit_cube(cubes[x][y][1], zs[0] + (zs[1] / 2), zs[1]);
+              edit_cube(cubes[x][y][2], zs[0] + zs[1] + (zs[2] / 2), zs[2]);
             }
 
             var state = get_sample_state();
