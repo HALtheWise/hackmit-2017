@@ -192,11 +192,11 @@
                   render();
                 } );
                 gui.add( params, 'snowRate', 0, 3 ).onChange( function ( val ) {
-                  parameters.snowRate = val/default_snow_rate;
+                  parameters.snowRate = val*default_snow_rate;
                   render();
                 } );
-                gui.add( params, 'erosionRate', 0, 4 ).onChange( function ( val ) {
-                  parameters.erosionRate = val/default_erosion_rate_const;
+                gui.add( params, 'erosionRate', 0, 30 ).onChange( function ( val ) {
+                  parameters.erosionRate = val*default_erosion_rate_const;
                   render();
                 } );
 
