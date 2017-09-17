@@ -165,20 +165,40 @@
 
             var minTemp=0;
             var maxTemp=1;
-            var parameters = {'minTemp':minTemp, 'maxTemp':maxTemp};
+            var parameters = {
+            	'minTemp':minTemp, 
+            	'maxTemp':maxTemp, 
+            	'seaLevel':default_ocean_altitude,
+            	'snowRate':default_snow_rate,
+            	'erosionRate':default_erosion_rate_const,
+            };
 
             function buildGui() {
                 gui = new dat.GUI();
                 var params = {
-                  minTemp: minTemp,
-                  maxTemp: maxTemp,
+                  minTemp: (minTemp*50+20),
+                  maxTemp: (maxTemp*50+20),
+                  snowRate: 1,
+                  erosionRate: 1,
                 }
-                gui.add( params, 'minTemp', 0, 1 ).onChange( function ( val ) {
-                  parameters.minTemp = val;
+                gui.add( params, 'minTemp', 0, 100 ).onChange( function ( val ) {
+                  parameters.minTemp = (val-20)/50;
                   render();
                 } );
-                gui.add( params, 'maxTemp', 0, 1 ).onChange( function ( val ) {
-                  parameters.maxTemp = val;
+                gui.add( params, 'maxTemp', 0, 100 ).onChange( function ( val ) {
+                  parameters.maxTemp = (val-20)/50;
+                  render();
+                } );
+                gui.add( parameters, 'seaLevel', 0, 10 ).onChange( function ( val ) {
+                  parameters.seaLevel = val;
+                  render();
+                } );
+                gui.add( params, 'snowRate', 0, 3 ).onChange( function ( val ) {
+                  parameters.snowRate = val/default_snow_rate;
+                  render();
+                } );
+                gui.add( params, 'erosionRate', 0, 4 ).onChange( function ( val ) {
+                  parameters.erosionRate = val/default_erosion_rate_const;
                   render();
                 } );
                 gui.open();
