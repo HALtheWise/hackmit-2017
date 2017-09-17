@@ -126,8 +126,9 @@ function simulate_step(state){
 				state[i][j][1]=parameters.seaLevel-state[i][j][0];
 			}else{
 				state[i][j][1] = state[i][j][1] + flows[i][j][0] - flows[i][j][1];
-				var stone_eroded = Math.pow(flows[i][j][1]/dt, 2)*erosion_rate_const*dt;
+				var stone_eroded = Math.pow(flows[i][j][1]/dt, 2)*parameters.erosionRate*dt;
 				state[i][j][0] -= stone_eroded;
+				state[i][j][0] = Math.max(state[i][j][0], 0)
 				
 				if (i==0 || j==0 || i==grid_height-1 || j==grid_width-1) {
 					// This is a boundary cell

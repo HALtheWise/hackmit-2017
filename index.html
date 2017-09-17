@@ -170,6 +170,7 @@
             	'maxTemp':maxTemp, 
             	'seaLevel':default_ocean_altitude,
             	'snowRate':default_snow_rate,
+            	'erosionRate':default_erosion_rate_const,
             };
 
             function buildGui() {
@@ -178,12 +179,13 @@
                   minTemp: (minTemp*50+20),
                   maxTemp: (maxTemp*50+20),
                   snowRate: 1,
+                  erosionRate: 1,
                 }
-                gui.add( params, 'maxTemp', 0, 100 ).onChange( function ( val ) {
+                gui.add( params, 'minTemp', 0, 100 ).onChange( function ( val ) {
                   parameters.minTemp = (val-20)/50;
                   render();
                 } );
-                gui.add( params, 'minTemp', 0, 100 ).onChange( function ( val ) {
+                gui.add( params, 'maxTemp', 0, 100 ).onChange( function ( val ) {
                   parameters.maxTemp = (val-20)/50;
                   render();
                 } );
@@ -193,6 +195,10 @@
                 } );
                 gui.add( params, 'snowRate', 0, 3 ).onChange( function ( val ) {
                   parameters.snowRate = val/default_snow_rate;
+                  render();
+                } );
+                gui.add( params, 'erosionRate', 0, 4 ).onChange( function ( val ) {
+                  parameters.erosionRate = val/default_erosion_rate_const;
                   render();
                 } );
                 gui.open();
