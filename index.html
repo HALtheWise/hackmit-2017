@@ -63,6 +63,10 @@
 
             function add_cube(x, z, y_start, y_end, material) {
                 var geometry = new THREE.BoxBufferGeometry( 1.2 + Math.random()/4, 1, 1.2 + Math.random()/4);
+                if (material.name == "water") {
+                    radius = 0.62;
+                    geometry = new THREE.CylinderGeometry( radius, radius, 1 );
+                }
                 var cube = new THREE.Mesh( geometry, material );
                 cube.material.transparent = true;
                 cube.position.set( x, y_start, z );
@@ -95,7 +99,13 @@
                   cube.material.opacity = abs_y;
                   cube.scale.y = abs_y;
                 } else {
-                  cube.material.opacity = 1;
+                  if (cube.material.name == 'water') {
+                    cube.material.opacity = .7;
+                  } else {
+                    cube.material.opacity = 1;
+                  }
+
+
                   cube.scale.y = abs_y;
                 }
                 cube.updateMatrix();
@@ -155,20 +165,40 @@
 
             var minTemp=0;
             var maxTemp=1;
-            var parameters = {'minTemp':minTemp, 'maxTemp':maxTemp};
+            var parameters = {
+            	'minTemp':minTemp, 
+            	'maxTemp':maxTemp, 
+            	'seaLevel':default_ocean_altitude,
+            	'snowRate':default_snow_rate,
+            	'erosionRate':default_erosion_rate_const,
+            };
 
             function buildGui() {
                 gui = new dat.GUI();
                 var params = {
-                  minTemp: minTemp,
-                  maxTemp: maxTemp,
+                  minTemp: (minTemp*50+20),
+                  maxTemp: (maxTemp*50+20),
+                  snowRate: 1,
+                  erosionRate: 1,
                 }
-                gui.add( params, 'minTemp', 0, 1 ).onChange( function ( val ) {
-                  parameters.minTemp = val;
+                gui.add( params, 'minTemp', 0, 100 ).onChange( function ( val ) {
+                  parameters.minTemp = (val-20)/50;
                   render();
                 } );
-                gui.add( params, 'maxTemp', 0, 1 ).onChange( function ( val ) {
-                  parameters.maxTemp = val;
+                gui.add( params, 'maxTemp', 0, 100 ).onChange( function ( val ) {
+                  parameters.maxTemp = (val-20)/50;
+                  render();
+                } );
+                gui.add( parameters, 'seaLevel', 0, 10 ).onChange( function ( val ) {
+                  parameters.seaLevel = val;
+                  render();
+                } );
+                gui.add( params, 'snowRate', 0, 3 ).onChange( function ( val ) {
+                  parameters.snowRate = val/default_snow_rate;
+                  render();
+                } );
+                gui.add( params, 'erosionRate', 0, 4 ).onChange( function ( val ) {
+                  parameters.erosionRate = val/default_erosion_rate_const;
                   render();
                 } );
                 gui.open();
@@ -197,7 +227,7 @@
                   var cube = scene.children[i]
                   try {
                     if (cube.material.name == "water") {
-                      cube.rotation.y += (.5 - Math.random()) / 5;
+                      cube.rotation.y += (1.0 - Math.random()) / 5;
                     }
                   } catch (e) {
                   } finally {
