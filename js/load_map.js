@@ -19,3 +19,4 @@ function loadCSV(data){
 }
 
 var neatFile = 'heightmaps/neat.csv';
+var brainFile = 'heightmaps/brain.csv';
