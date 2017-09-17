@@ -170,15 +170,15 @@
             function buildGui() {
                 gui = new dat.GUI();
                 var params = {
-                  minTemp: minTemp,
-                  maxTemp: maxTemp,
+                  minTemp: (minTemp*50+20),
+                  maxTemp: (maxTemp*50+20),
                 }
-                gui.add( params, 'minTemp', 0, 1 ).onChange( function ( val ) {
-                  parameters.minTemp = val;
+                gui.add( params, 'minTemp', 0, 100 ).onChange( function ( val ) {
+                  parameters.minTemp = (val-20)/50;
                   render();
                 } );
-                gui.add( params, 'maxTemp', 0, 1 ).onChange( function ( val ) {
-                  parameters.maxTemp = val;
+                gui.add( params, 'maxTemp', 0, 100 ).onChange( function ( val ) {
+                  parameters.maxTemp = (val-20)/50;
                   render();
                 } );
                 gui.open();
