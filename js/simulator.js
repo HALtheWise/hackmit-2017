@@ -3,7 +3,7 @@ start is an array of arrays of [stone height, water height, snow height]
 returns an array of arrays of [stone height, water height, snow height]
 */
 function simulate_step(state){
-	dt = 0.5;
+	dt = 0.05;
 
 	// Add snow
 	snowfallFunc = function(initial) {
@@ -47,7 +47,7 @@ function simulate_step(state){
 		for (var j=0; j<grid_width; j++){
 			// Calculate heights
 			var ownHeight = state[i][j][0] + state[i][j][1];
-			
+
 			var northHeight = 99999999999999;
 			var southHeight = 99999999999999;
 			var westHeight  = 99999999999999;
@@ -113,7 +113,7 @@ function simulate_step(state){
 			}
 		}
 	}
-	
+
 
 	state = state.map(function(row){return row.map(meltingFunc)})
 

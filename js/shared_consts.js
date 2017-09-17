@@ -1,5 +1,5 @@
-grid_width = 1000;
-grid_height = 1000;
+grid_width = 3;
+grid_height = 3;
 
 snow_altitude = 11.0; // Units
 ocean_altitude = 2.5; // Units
