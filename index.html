@@ -64,7 +64,7 @@
             function add_cube(x, z, y_start, y_end, material) {
                 var geometry = new THREE.BoxBufferGeometry( 1.2 + Math.random()/4, 1, 1.2 + Math.random()/4);
                 if (material.name == "water") {
-                    radius = 0.62;
+                    radius = 0.7;
                     geometry = new THREE.CylinderGeometry( radius, radius, 1 );
                 }
                 var cube = new THREE.Mesh( geometry, material );
