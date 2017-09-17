@@ -56,62 +56,78 @@ function simulate_step(state){
 
 	// Flow the water
 
-	// Makes a grid_height x grid_width x 2 array of 0's
-	// [flow_in, flow_out]
-	var flows=new Array(grid_height).fill(0).map(function(hi){return new Array(grid_width).fill(0).map(function(hi){return [0,0]})});
+	var cellsToFlow = []
 
 	for(var i=0; i<grid_height; i++){
 		for (var j=0; j<grid_width; j++){
 			// Calculate heights
 			var ownHeight = state[i][j][0] + state[i][j][1];
 
-			var northHeight = 99999999999999;
-			var southHeight = 99999999999999;
-			var westHeight  = 99999999999999;
-			var eastHeight  = 99999999999999;
+			cellsToFlow.push({height: ownHeight, i:i, j:j});
+		}
+	}
 
-			if (i > 0) {
-				northHeight = state[i-1][j][0] + state[i-1][j][1];
-			}
-			if (i < grid_height-1) {
-				southHeight = state[i+1][j][0] + state[i+1][j][1];
-			}
-			if (j > 0) {
-				westHeight = state[i][j-1][0] + state[i][j-1][1];
-			}
-			if (j < grid_width-1) {
-				eastHeight = state[i][j+1][0] + state[i][j+1][1];
-			}
+	cellsToFlow.sort(function(a,b){return b.height-a.height});
+	// console.log(cellsToFlow);
 
-			smallest=Math.min(northHeight, southHeight, westHeight, eastHeight);
+	// Makes a grid_height x grid_width x 2 array of 0's
+	// [flow_in, flow_out]
+	var flows=new Array(grid_height).fill(0).map(function(hi){return new Array(grid_width).fill(0).map(function(hi){return [0,0]})});
 
-			if (ownHeight <= smallest){
-				continue;
-			}
+	for(var index=0; index<cellsToFlow.length; index++){
+		var cell = cellsToFlow[index];
+		var i = cell.i;
+		var j = cell.j;
 
-			// Calculate flow
-			flowAmount = flow_rate_const*(ownHeight-smallest)*dt;
-			flowAmount = Math.min(flowAmount, state[i][j][1]);
+		// Calculate heights
+		var ownHeight = state[i][j][0] + state[i][j][1];
 
-			flows[i][j][1] = flowAmount;
+		var northHeight = 99999999999999;
+		var southHeight = 99999999999999;
+		var westHeight  = 99999999999999;
+		var eastHeight  = 99999999999999;
 
-			// Apply flow
-			if (northHeight==smallest){
-				flows[i-1][j][0] += flowAmount;
-				continue;
-			}
-			if (southHeight==smallest){
-				flows[i+1][j][0] += flowAmount;
-				continue;
-			}
-			if (westHeight==smallest){
-				flows[i][j-1][0] += flowAmount;
-				continue;
-			}
-			if (eastHeight==smallest){
-				flows[i][j+1][0] += flowAmount;
-				continue;
-			}
+		if (i > 0) {
+			northHeight = state[i-1][j][0] + state[i-1][j][1];
+		}
+		if (i < grid_height-1) {
+			southHeight = state[i+1][j][0] + state[i+1][j][1];
+		}
+		if (j > 0) {
+			westHeight = state[i][j-1][0] + state[i][j-1][1];
+		}
+		if (j < grid_width-1) {
+			eastHeight = state[i][j+1][0] + state[i][j+1][1];
+		}
+
+		smallest=Math.min(northHeight, southHeight, westHeight, eastHeight);
+
+		if (ownHeight <= smallest){
+			continue;
+		}
+
+		// Calculate flow
+		flowAmount = flow_rate_const*(ownHeight-smallest)*dt;
+		flowAmount = Math.min(flowAmount, state[i][j][1]+flows[i][j][0]);
+
+		flows[i][j][1] = flowAmount;
+
+		// Apply flow
+		if (northHeight==smallest){
+			flows[i-1][j][0] += flowAmount;
+			continue;
+		}
+		if (southHeight==smallest){
+			flows[i+1][j][0] += flowAmount;
+			continue;
+		}
+		if (westHeight==smallest){
+			flows[i][j-1][0] += flowAmount;
+			continue;
+		}
+		if (eastHeight==smallest){
+			flows[i][j+1][0] += flowAmount;
+			continue;
 		}
 	}
 
