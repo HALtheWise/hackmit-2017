@@ -201,6 +201,15 @@
                   parameters.erosionRate = val/default_erosion_rate_const;
                   render();
                 } );
+
+                var text =
+                {
+                    map: 'map'
+                }
+                gui.add(text, 'map', { King: 0, Queen: 1, Rook: 2 } ).onChange(  function ( val ) {
+                  console.log(val);
+                  render();
+                } );
                 gui.open();
             }
             buildGui();
