@@ -99,7 +99,13 @@
                   cube.material.opacity = abs_y;
                   cube.scale.y = abs_y;
                 } else {
-                  cube.material.opacity = 1;
+                  if (cube.material.name == 'water') {
+                    cube.material.opacity = .7;
+                  } else {
+                    cube.material.opacity = 1;
+                  }
+
+
                   cube.scale.y = abs_y;
                 }
                 cube.updateMatrix();
