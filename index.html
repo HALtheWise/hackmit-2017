@@ -45,35 +45,35 @@
 
 
 
-            function add_cube(x, y, z_start, z_end, material) {
+            function add_cube(x, z, y_start, y_end, material) {
                 var geometry = new THREE.BoxBufferGeometry( 1, 1, 1);
                 var cube = new THREE.Mesh( geometry, material );
                 cube.material.transparent = true;
-                cube.position.set( x, y, z_start );
+                cube.position.set( x, y_start, z );
                 scene.add( cube );
                 return cube;
             }
 
-            function add_cubes(x, y, zs) {
+            function add_cubes(x, z, ys) {
               var stone_material = new THREE.MeshBasicMaterial( { map: stone_texture } );
               var water_material = new THREE.MeshBasicMaterial( { map: water_texture } );
               var snow_material = new THREE.MeshBasicMaterial( { map: snow_texture } );
-              return [add_cube(x, y, 0, zs[0], stone_material),
-                      add_cube(x, y, zs[0], zs[1], water_material),
-                      add_cube(x, y, zs[1], zs[2], snow_material)]
+              return [add_cube(x, z, 0, ys[0], stone_material),
+                      add_cube(x, z, ys[0], ys[1], water_material),
+                      add_cube(x, z, ys[1], ys[2], snow_material)]
             }
 
-            function edit_cube(cube, z_start, abs_z) {
-                cube.position.z = z_start;
+            function edit_cube(cube, y_start, abs_y) {
+                cube.position.y = y_start;
                 // var abs_z = z_end - z_start
-                if (abs_z <= 0) {
+                if (abs_y <= 0) {
                   cube.material.opacity = 0;
-                } else if (abs_z <= 1) {
-                  cube.material.opacity = abs_z;
-                  cube.scale.z = abs_z;
+                } else if (abs_y <= 1) {
+                  cube.material.opacity = abs_y;
+                  cube.scale.y = abs_y;
                 } else {
                   cube.material.opacity = 1;
-                  cube.scale.z = abs_z;
+                  cube.scale.y = abs_y;
                 }
                 cube.updateMatrix();
             }
@@ -89,8 +89,8 @@
 
             //make cells
             for (x = 0; x < grid_width; x++) {
-                for (y = 0; y < grid_height; y++) {
-                    cubes[x][y] = add_cubes(x, y, state[x][y]);
+                for (z = 0; z < grid_height; z++) {
+                    cubes[x][z] = add_cubes(x, z, state[x][z]);
                 }
             }
 
@@ -108,8 +108,8 @@
 
 
             for (x = 0; x < grid_width; x++) {
-                for (y = 0; y < grid_height; y++) {
-                    edit_cubes(x, y, state[x][y]);
+                for (z = 0; z < grid_height; z++) {
+                    edit_cubes(x, z, state[x][z]);
                 }
             }
 
