@@ -1,6 +1,10 @@
 <head>
+	<script type="text/javascript" src="js/jquery-3.2.1.js"></script>
+	<script type="text/javascript" src="js/jquery.csv.js"></script>
     <script type="text/javascript" src="js/shared_consts.js"></script>
     <script type="text/javascript" src="js/simulator.js"></script>
+    <script src="js/load_map.js"></script>
+    
     <meta charset=utf-8>
     <title>My first three.js app</title>
     <style>
@@ -19,6 +23,8 @@
             renderer.setSize( window.innerWidth, window.innerHeight );
             document.body.appendChild( renderer.domElement );
 
+            loadMap(neatFile);
+            var state = loadedMap;
 
             controls = new THREE.OrbitControls( camera, renderer.domElement );
             controls.addEventListener( 'change', render ); // remove when using animation loop
@@ -84,8 +90,6 @@
               edit_cube(cubes[x][y][1], zs[0] + (zs[1] / 2), zs[1]);
               edit_cube(cubes[x][y][2], zs[0] + zs[1] + (zs[2] / 2), zs[2]);
             }
-
-            var state = get_sample_state();
 
 
             //make cells
