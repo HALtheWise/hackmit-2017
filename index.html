@@ -214,6 +214,32 @@
                   }
                 }
 
+                var title = document.createElement('h1');
+                title.style.color = "white";
+                title.style.position = 'absolute';
+                //title.style.zIndex = 1;    // if you still don't see the label, try uncommenting this
+                title.style.width = 390;
+                title.style.height = 35;
+                title.style.top = 5;
+                title.style.left = 5;
+                title.style.backgroundColor = "black";
+                title.innerHTML = "Riverview: River Simulator";
+
+                document.body.appendChild(title);
+
+                var text2 = document.createElement('h2');
+                text2.style.color = "white";
+                text2.style.position = 'absolute';
+                //text2.style.zIndex = 1;    // if you still don't see the label, try uncommenting this
+                text2.style.width = 120;
+                text2.style.height = 30;
+                text2.style.bottom = 5;
+                text2.style.left = 5;
+                text2.style.backgroundColor = "black";
+                text2.innerHTML = (timeElapsed/year_length).toFixed(2) + " years";
+
+                document.body.appendChild(text2);
+
                 render();
             }
 
