@@ -154,7 +154,7 @@
             }
 
             var minTemp=0;
-            var maxTemp=68;
+            var maxTemp=1;
             var parameters = {'minTemp':minTemp, 'maxTemp':maxTemp};
 
             function buildGui() {
@@ -163,11 +163,11 @@
                   minTemp: minTemp,
                   maxTemp: maxTemp,
                 }
-                gui.add( params, 'minTemp', 0, 32 ).onChange( function ( val ) {
+                gui.add( params, 'minTemp', 0, 1 ).onChange( function ( val ) {
                   parameters.minTemp = val;
                   render();
                 } );
-                gui.add( params, 'maxTemp', 68, 100 ).onChange( function ( val ) {
+                gui.add( params, 'maxTemp', 0, 1 ).onChange( function ( val ) {
                   parameters.maxTemp = val;
                   render();
                 } );
