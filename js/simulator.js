@@ -103,6 +103,8 @@ function simulate_step(state){
 	for(var i=0; i<grid_height; i++){
 		for (var j=0; j<grid_width; j++){
 			if(state[i][j][0]<ocean_altitude){
+				// Remove the land, it's OCEAN time!
+				state[i][j][0] = 0.0;
 				state[i][j][1]=ocean_altitude-state[i][j][0];
 			}else{
 				state[i][j][1] = state[i][j][1] + flows[i][j][0] - flows[i][j][1];

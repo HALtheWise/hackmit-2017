@@ -41,7 +41,7 @@
 				function(row){return Math.max.apply(null, row.map(
 					function(cell){return cell[2]}))}));
 
-			var maxWater = 5;
+			var maxWater = 8;
 			// var maxSnow = 
 
 			if (maxStone===0){maxStone=1}
@@ -133,6 +133,8 @@
 	
 <button onclick="resetState()">Reset</button>
 <button onclick="loop()">Step</button>
+<button onclick="loadMap('heightmaps/neat.csv')">Load Neat</button>
+
 
 <div id="output"><table>No child yet</table></div>
 
