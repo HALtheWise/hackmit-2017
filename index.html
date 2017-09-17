@@ -163,11 +163,9 @@
                 mouse_start_y = event.clientY;
             }
 
-            var minTemp=0;
-            var maxTemp=1;
             var parameters = {
-            	'minTemp':minTemp, 
-            	'maxTemp':maxTemp, 
+            	'minTemp':0, 
+            	'maxTemp':1, 
             	'seaLevel':default_ocean_altitude,
             	'snowRate':default_snow_rate,
             	'erosionRate':default_erosion_rate_const,
@@ -176,8 +174,8 @@
             function buildGui() {
                 gui = new dat.GUI();
                 var params = {
-                  minTemp: (minTemp*50+20),
-                  maxTemp: (maxTemp*50+20),
+                  minTemp: (parameters.minTemp*50+20),
+                  maxTemp: (parameters.maxTemp*50+20),
                   snowRate: 1,
                   erosionRate: 1,
                 }
