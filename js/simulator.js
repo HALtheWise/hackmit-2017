@@ -1,16 +1,22 @@
+var timeElapsed = 0;
+
 /*
 start is an array of arrays of [stone height, water height, snow height]
 returns an array of arrays of [stone height, water height, snow height]
 */
 function simulate_step(state){
-	dt = 0.05;
+	dt = 0.1;
+	timeElapsed += dt;
+
+	var temp = -Math.sin(timeElapsed*2*Math.PI/year_length)
 
 	// Add snow
 	snowfallFunc = function(initial) {
 		altitude = initial[0];
 		snow = initial[2];
+		current_snow_rate = Math.max(-temp, 0)*snow_rate;
 		if (altitude > snow_altitude){
-			snow += snow_rate * dt;
+			snow += current_snow_rate * dt;
 		}
 		// BEWARE: this may alter the original object in a bad way. Oops.
 		initial[2] = snow;
