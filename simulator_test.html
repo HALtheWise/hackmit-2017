@@ -1,0 +1,143 @@
+<head>
+	<script type="text/javascript" src="js/jquery-3.2.1.js"></script>
+	<script type="text/javascript" src="js/jquery.csv.js"></script>
+	<script type="text/javascript" src="js/shared_consts.js"></script>
+
+	<script type="text/javascript">
+		grid_width = 4;
+		grid_height = 3;
+	</script>
+
+	<script type="text/javascript" src="js/simulator.js"></script>
+
+	<script type="text/javascript">
+		var state;
+
+		function loadMap(url){
+			$.get(url, null, loadCSV)
+		}
+
+		function loadCSV(data){
+			arrays = $.csv.toArrays(data)
+
+			state = arrays.map(
+				function(row){return row.map(
+					function(val){return [parseFloat(val), 0.0, 0.0]})})
+
+			grid_height = state.length
+			grid_width = state[0].length
+
+			display(state)
+		}
+
+		function display(dispstate){
+			var maxStone = Math.max.apply(null, dispstate.map(
+				function(row){return Math.max.apply(null, row.map(
+					function(cell){return cell[0]}))}));
+			// var maxWater = Math.max.apply(null, dispstate.map(
+			// 	function(row){return Math.max.apply(null, row.map(
+			// 		function(cell){return cell[1]}))}));
+			var maxSnow  = Math.max.apply(null, dispstate.map(
+				function(row){return Math.max.apply(null, row.map(
+					function(cell){return cell[2]}))}));
+
+			var maxWater = 8;
+			// var maxSnow = 
+
+			if (maxStone===0){maxStone=1}
+			if (maxWater===0){maxWater=1}
+			if (maxSnow===0){maxSnow=1}
+			cellFromVal = function(pixel){
+				var stone = pixel[0];
+				var water = pixel[1];
+				var snow = pixel[2];
+
+				var stoneSpan = document.createElement("SPAN");
+				stoneSpan.className = "chart stone";
+				stoneSpan.innerText = '{' + Math.round(stone/maxStone*100) + '}';
+
+				var waterSpan = document.createElement("SPAN");
+				waterSpan.className = "chart water";
+				waterSpan.innerText = '{' + Math.round(water/maxWater*100) + '}';
+
+				var snowSpan = document.createElement("SPAN");
+				snowSpan.className = "chart snow";
+				snowSpan.innerText = '{' + Math.round(snow/maxSnow*100) + '}';
+
+				td = document.createElement('TD')
+				td.appendChild(stoneSpan)
+				td.appendChild(waterSpan)
+				td.appendChild(snowSpan)
+				return td
+			}
+
+			table = document.createElement('table')
+			for (var i = 0; i < grid_height; i++){
+				var row = document.createElement('tr');
+				for (var j = 0; j < grid_width; j++){
+					row.appendChild(cellFromVal(dispstate[i][j]))
+				}
+				table.appendChild(row)
+			}
+
+			document.getElementById('output').innerHTML = "";
+			document.getElementById("output").appendChild(table);
+		}
+
+		function resetState(){
+			state=[
+			[[15.0,0.0,0.0],[10.0,0.0,0.0],[9.0,0.0,0.0],[0.0,0.0,0.0]],
+			[[13.0,0.0,0.0],[7.0 ,0.0,0.0],[5.0,0.0,0.0],[0.0,0.0,0.0]],
+			[[15.0,0.0,0.0],[10.0,0.0,0.0],[9.0,0.0,0.0],[0.0,0.0,0.0]]
+			];
+
+			display(state);
+		}
+
+		
+
+		function loop(){
+			state = simulate_step(state);
+			display(state);
+		}
+	</script>
+
+	<style type="text/css">
+		@font-face {
+		    font-family: chart;
+		    src: url("resources/spark.otf") format("opentype");
+		}
+
+		.chart {
+			font-family: chart;
+			font-size: 3pt;
+		}
+
+		.water {
+			color: blue;
+		}
+		.stone {
+			color: brown;
+		}
+		.snow {
+			color: white;
+		}
+
+		body {
+			background-color: black;
+			color: white;
+		}
+	</style>
+</head>
+<body onload="resetState()">
+	
+<button onclick="resetState()">Reset</button>
+<button onclick="loop()">Step</button>
+<button onclick="loadMap('heightmaps/neat.csv')">Load Neat</button>
+
+
+<div id="output"><table>No child yet</table></div>
+
+<!-- <div><span class="chart stone">{24}</span><span class="chart water">{84}</span><span class="chart snow">{10}</span></div> -->
+
+</body>
