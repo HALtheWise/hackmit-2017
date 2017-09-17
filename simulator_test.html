@@ -1,4 +1,6 @@
 <head>
+	<script type="text/javascript" src="js/jquery-3.2.1.js"></script>
+	<script type="text/javascript" src="js/jquery.csv.js"></script>
 	<script type="text/javascript" src="js/shared_consts.js"></script>
 
 	<script type="text/javascript">
@@ -10,6 +12,23 @@
 
 	<script type="text/javascript">
 		var state;
+
+		function loadMap(url){
+			$.get(url, null, loadCSV)
+		}
+
+		function loadCSV(data){
+			arrays = $.csv.toArrays(data)
+
+			state = arrays.map(
+				function(row){return row.map(
+					function(val){return [parseFloat(val), 0.0, 0.0]})})
+
+			grid_height = state.length
+			grid_width = state[0].length
+
+			display(state)
+		}
 
 		function display(dispstate){
 			var maxStone = Math.max.apply(null, dispstate.map(
@@ -91,7 +110,7 @@
 
 		.chart {
 			font-family: chart;
-			font-size: 40pt;
+			font-size: 3pt;
 		}
 
 		.water {
@@ -117,6 +136,6 @@
 
 <div id="output"><table>No child yet</table></div>
 
-<div><span class="chart stone">{24}</span><span class="chart water">{84}</span><span class="chart snow">{10}</span></div>
+<!-- <div><span class="chart stone">{24}</span><span class="chart water">{84}</span><span class="chart snow">{10}</span></div> -->
 
 </body>
