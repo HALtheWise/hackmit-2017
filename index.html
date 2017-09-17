@@ -64,7 +64,7 @@
             }
 
             function edit_cube(cube, z_start, z_end) {
-                cube.position.z = z_end;
+                cube.position.z = z_start;
                 var abs_z = z_end - z_start
                 if (abs_z <= 0) {
                   cube.material.opacity = 0;
@@ -107,16 +107,22 @@
             }
 
 
+            for (x = 0; x < grid_width; x++) {
+                for (y = 0; y < grid_height; y++) {
+                    edit_cubes(x, y, state[x][y]);
+                }
+            }
+
             function animate() {
                 requestAnimationFrame( animate );
 
                 state = simulate_step(get_sample_state());
                 //edit cells
-                for (x = 0; x < grid_width; x++) {
-                    for (y = 0; y < grid_height; y++) {
-                        edit_cubes(x, y, state[x][y]);
-                    }
-                }
+                // for (x = 0; x < grid_width; x++) {
+                //     for (y = 0; y < grid_height; y++) {
+                //         edit_cubes(x, y, state[x][y]);
+                //     }
+                // }
                 scene.updateMatrix();
 
                 // for (i = 0; i < scene.children.length; i++) {
