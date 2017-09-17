@@ -7,17 +7,26 @@ returns an array of arrays of [stone height, water height, snow height]
 function simulate_step(state){
 	dt = 0.1;
 	timeElapsed += dt;
+	var seasonalTemp = (-Math.sin(timeElapsed*2*Math.PI/year_length)+1)/2; // from 0 to 1 scale of temp
+	// var avgTemp = 0.1;
 
-	var temp = -Math.sin(timeElapsed*2*Math.PI/year_length)
+	// var temp = -Math.sin(timeElapsed*2*Math.PI/year_length) //previous way of making fluctuating seasons, replaced by local temps.
+
+	localTempFunc = function(altitude){
+		altitudeTemp = 1-(altitude/15)
+		return .5*altitudeTemp+.5*seasonalTemp //range between 0 to 1 (0 is low temp, 1 is high temp)
+		// return avgTemp/altitude*10; //totally off scale. FIX.
+	}
 
 	// Add snow
 	snowfallFunc = function(initial) {
 		altitude = initial[0];
 		snow = initial[2];
-		current_snow_rate = Math.max(-temp, 0)*snow_rate;
-		if (altitude > snow_altitude){
-			snow += current_snow_rate * dt;
-		}
+		temp = localTempFunc(altitude);
+
+		current_snow_rate = snow_rate*Math.max(0, maximum_snow_temp-temp)/Math.max(2.0, snow);
+
+		snow += current_snow_rate*dt;
 		// BEWARE: this may alter the original object in a bad way. Oops.
 		initial[2] = snow;
 		return initial;
@@ -31,7 +40,9 @@ function simulate_step(state){
 		snow = initial[2];
 		water = initial[1];
 
-		melt = melt_rate * dt;
+		current_melt_rate = melt_rate*Math.max(0, temp-minimum_melt_temp);
+
+		melt = current_melt_rate * dt;
 		melt = Math.min(melt, snow);
 
 		snow -= melt;
