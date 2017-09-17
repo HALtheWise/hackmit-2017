@@ -104,6 +104,8 @@
             camera.position.y = 50;
 
             window.addEventListener( 'resize', onWindowResize, false );
+            document.addEventListener( 'mouseup', onDocumentMouseUp, false );
+            document.addEventListener( 'mousedown', onDocumentMouseDown, false );
 
             function onWindowResize() {
             	camera.aspect = window.innerWidth / window.innerHeight;
@@ -116,6 +118,24 @@
                 for (z = 0; z < grid_height; z++) {
                     edit_cubes(x, z, state[x][z]);
                 }
+            }
+
+            var mouse_start_x = 0;
+            var mouse_start_y = 0;
+            var move_delta = 5;
+
+            function onDocumentMouseUp( event ) {
+                if (Math.abs(event.clientX - mouse_start_x) < move_delta
+                    && Math.abs(event.clientY - mouse_start_y) < move_delta) {
+                    event.preventDefault();
+                    var vector = new THREE.Vector3( ( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1, 0.5 );
+                    console.log(vector);
+                }
+            }
+
+            function onDocumentMouseDown( event ) {
+                mouse_start_x = event.clientX;
+                mouse_start_y = event.clientY;
             }
 
             function animate() {
